@@ -21,46 +21,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/component")
 @CrossOrigin(origins = "http://localhost:4200")
-public class ComponentController {
+public class ExperienceController {
 
     private final ProfessionalExperienceService professionalExperienceService;
-    private final EducationService educationService;
-    private final SkillService skillService;
-    private final ProjectService projectService;
 
     @Autowired
-    public ComponentController(
-            ProfessionalExperienceService professionalExperienceService,
-            EducationService educationService, SkillService skillService,
-            ProjectService projectService) {
+    public ExperienceController(ProfessionalExperienceService professionalExperienceService) {
         this.professionalExperienceService = professionalExperienceService;
-        this.educationService = educationService;
-        this.skillService = skillService;
-        this.projectService = projectService;
     }
 
     @GetMapping("/experiences")
     public ResponseEntity<List<ProfessionalExperience>> getAllExperienceComponents() {
         List<ProfessionalExperience> experiences = professionalExperienceService.getAllExperiences();
         return new ResponseEntity<>(experiences, HttpStatus.OK);
-    }
-
-    @GetMapping("/education-list")
-    public ResponseEntity<List<Education>> getAllEducationComponents() {
-        List<Education> allEducation = educationService.getAllStudies();
-        return new ResponseEntity<>(allEducation, HttpStatus.OK);
-    }
-
-    @GetMapping("/skills")
-    public ResponseEntity<List<Skill>> getAllSkills() {
-        List<Skill> skills = skillService.getAllSkills();
-        return new ResponseEntity<>(skills, HttpStatus.OK);
-    }
-
-    @GetMapping("/projects")
-    public ResponseEntity<List<Project>> getAllProjects() {
-        List<Project> projects = projectService.getAllProjects();
-        return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
     // Test case controllers
