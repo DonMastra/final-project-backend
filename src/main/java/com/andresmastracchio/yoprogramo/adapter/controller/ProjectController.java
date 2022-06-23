@@ -1,13 +1,7 @@
 package com.andresmastracchio.yoprogramo.adapter.controller;
 
-import com.andresmastracchio.yoprogramo.entity.Education;
-import com.andresmastracchio.yoprogramo.entity.ProfessionalExperience;
 import com.andresmastracchio.yoprogramo.entity.Project;
-import com.andresmastracchio.yoprogramo.entity.Skill;
-import com.andresmastracchio.yoprogramo.usecase.impl.EducationService;
-import com.andresmastracchio.yoprogramo.usecase.impl.ProfessionalExperienceService;
 import com.andresmastracchio.yoprogramo.usecase.impl.ProjectService;
-import com.andresmastracchio.yoprogramo.usecase.impl.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,42 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/component")
+@RequestMapping("/api/project")
 @CrossOrigin(origins = "http://localhost:4200")
-public class ComponentController {
+public class ProjectController {
 
-    private final ProfessionalExperienceService professionalExperienceService;
-    private final EducationService educationService;
-    private final SkillService skillService;
     private final ProjectService projectService;
 
     @Autowired
-    public ComponentController(
-            ProfessionalExperienceService professionalExperienceService,
-            EducationService educationService, SkillService skillService,
-            ProjectService projectService) {
-        this.professionalExperienceService = professionalExperienceService;
-        this.educationService = educationService;
-        this.skillService = skillService;
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
-    }
-
-    @GetMapping("/experiences")
-    public ResponseEntity<List<ProfessionalExperience>> getAllExperienceComponents() {
-        List<ProfessionalExperience> experiences = professionalExperienceService.getAllExperiences();
-        return new ResponseEntity<>(experiences, HttpStatus.OK);
-    }
-
-    @GetMapping("/education-list")
-    public ResponseEntity<List<Education>> getAllEducationComponents() {
-        List<Education> allEducation = educationService.getAllStudies();
-        return new ResponseEntity<>(allEducation, HttpStatus.OK);
-    }
-
-    @GetMapping("/skills")
-    public ResponseEntity<List<Skill>> getAllSkills() {
-        List<Skill> skills = skillService.getAllSkills();
-        return new ResponseEntity<>(skills, HttpStatus.OK);
     }
 
     @GetMapping("/projects")
@@ -65,7 +32,7 @@ public class ComponentController {
 
     // Test case controllers
     /*
-    @PostMapping("nuevo")
+    @PostMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(@RequestBody Producto producto) {
         if (StringUtils.isBlank(producto.getNombreProducto())) {
@@ -82,7 +49,7 @@ public class ComponentController {
         return new ResponseEntity(new MessageDto("producto guardado"), HttpStatus.CREATED);
     }
 
-    @PutMapping("/actualizar/{id}")
+    @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@RequestBody Producto producto, @PathVariable("id") Long id) {
         if (!productoService.existePorId(id)) {
@@ -105,7 +72,7 @@ public class ComponentController {
         return new ResponseEntity(new MessageDto("producto actualizado"), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/borrar/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         if (!productoService.existePorId(id)) {
