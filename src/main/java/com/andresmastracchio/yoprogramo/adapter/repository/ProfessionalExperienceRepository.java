@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ProfessionalExperienceRepository extends JpaRepository<ProfessionalExperience, Integer> {
-    Optional<ProfessionalExperience> findById(int id);
+    boolean existsByJobTitle(String jobTitle);
 }
