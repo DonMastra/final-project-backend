@@ -23,7 +23,7 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
     private String projectTitle;
     private Date projectDate;
     private String description;

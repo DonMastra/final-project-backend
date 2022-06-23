@@ -23,7 +23,7 @@ public class Education {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
     private String studyTitle;
     private Date fromDate;
     private Date toDate;

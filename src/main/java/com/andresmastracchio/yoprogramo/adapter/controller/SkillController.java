@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/component")
+@RequestMapping("/api/skill")
 @CrossOrigin(origins = "http://localhost:4200")
 public class SkillController {
 
     private final SkillService skillService;
-
 
     @Autowired
     public SkillController(SkillService skillService) {
@@ -33,7 +32,7 @@ public class SkillController {
 
     // Test case controllers
     /*
-    @PostMapping("nuevo")
+    @PostMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(@RequestBody Producto producto) {
         if (StringUtils.isBlank(producto.getNombreProducto())) {
@@ -50,7 +49,7 @@ public class SkillController {
         return new ResponseEntity(new MessageDto("producto guardado"), HttpStatus.CREATED);
     }
 
-    @PutMapping("/actualizar/{id}")
+    @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@RequestBody Producto producto, @PathVariable("id") Long id) {
         if (!productoService.existePorId(id)) {
@@ -73,7 +72,7 @@ public class SkillController {
         return new ResponseEntity(new MessageDto("producto actualizado"), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/borrar/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         if (!productoService.existePorId(id)) {

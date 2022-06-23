@@ -1,13 +1,7 @@
 package com.andresmastracchio.yoprogramo.adapter.controller;
 
-import com.andresmastracchio.yoprogramo.entity.Education;
 import com.andresmastracchio.yoprogramo.entity.ProfessionalExperience;
-import com.andresmastracchio.yoprogramo.entity.Project;
-import com.andresmastracchio.yoprogramo.entity.Skill;
-import com.andresmastracchio.yoprogramo.usecase.impl.EducationService;
 import com.andresmastracchio.yoprogramo.usecase.impl.ProfessionalExperienceService;
-import com.andresmastracchio.yoprogramo.usecase.impl.ProjectService;
-import com.andresmastracchio.yoprogramo.usecase.impl.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/component")
+@RequestMapping("/api/exp")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ExperienceController {
 
@@ -38,7 +32,7 @@ public class ExperienceController {
 
     // Test case controllers
     /*
-    @PostMapping("nuevo")
+    @PostMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(@RequestBody Producto producto) {
         if (StringUtils.isBlank(producto.getNombreProducto())) {
@@ -55,7 +49,7 @@ public class ExperienceController {
         return new ResponseEntity(new MessageDto("producto guardado"), HttpStatus.CREATED);
     }
 
-    @PutMapping("/actualizar/{id}")
+    @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@RequestBody Producto producto, @PathVariable("id") Long id) {
         if (!productoService.existePorId(id)) {
@@ -78,7 +72,7 @@ public class ExperienceController {
         return new ResponseEntity(new MessageDto("producto actualizado"), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/borrar/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         if (!productoService.existePorId(id)) {
