@@ -1,12 +1,20 @@
 package com.andresmastracchio.yoprogramo.adapter.controller;
 
+import com.andresmastracchio.yoprogramo.dto.MessageDto;
 import com.andresmastracchio.yoprogramo.entity.Project;
 import com.andresmastracchio.yoprogramo.usecase.impl.ProjectService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,57 +38,60 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
-    // Test case controllers
-    /*
     @PostMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> create(@RequestBody Producto producto) {
-        if (StringUtils.isBlank(producto.getNombreProducto())) {
+    public ResponseEntity<?> create(@RequestBody Project project) {
+        if (StringUtils.isBlank(project.getProjectTitle())) {
             return new ResponseEntity(new MessageDto("el nombre es obligatorio"), HttpStatus.BAD_REQUEST);
         }
-        if (producto.getPrecio() == 0) {
-            return new ResponseEntity(new MessageDto("el precio es obligatorio"), HttpStatus.BAD_REQUEST);
-        }
-        if (productoService.existePorNombre(producto.getNombreProducto())) {
-            return new ResponseEntity(new MessageDto("ese nombre ya existe"), HttpStatus.BAD_REQUEST);
+
+        if (StringUtils.isBlank(project.getDescription())) {
+            return new ResponseEntity(new MessageDto("el nombre es obligatorio"), HttpStatus.BAD_REQUEST);
         }
 
-        productoService.guardar(producto);
-        return new ResponseEntity(new MessageDto("producto guardado"), HttpStatus.CREATED);
+        if (projectService.existsByProjectTitle(project.getProjectTitle())) {
+            return new ResponseEntity(new MessageDto("ese nombre de proyecto ya existe"), HttpStatus.BAD_REQUEST);
+        }
+
+        projectService.save(project);
+        return new ResponseEntity(new MessageDto("project guardado"), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> update(@RequestBody Producto producto, @PathVariable("id") Long id) {
-        if (!productoService.existePorId(id)) {
-            return new ResponseEntity(new MessageDto("no existe ese producto"), HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> update(@RequestBody Project project, @PathVariable("id") Integer id) {
+        if (!projectService.existsById(id)) {
+            return new ResponseEntity(new MessageDto("no existe el proyecto indicado"), HttpStatus.NOT_FOUND);
         }
-        if (StringUtils.isBlank(producto.getNombreProducto())) {
-            return new ResponseEntity(new MessageDto("el nombre es obligatorio"), HttpStatus.BAD_REQUEST);
+
+        if (StringUtils.isBlank(project.getProjectTitle())) {
+            return new ResponseEntity(new MessageDto("el nombre del proyecto es obligatorio"), HttpStatus.BAD_REQUEST);
         }
-        if (producto.getPrecio() == 0) {
-            return new ResponseEntity(new MessageDto("el precio es obligatorio"), HttpStatus.BAD_REQUEST);
+
+        if (StringUtils.isBlank(project.getDescription())) {
+            return new ResponseEntity(new MessageDto("la descripcion es obligatoria"), HttpStatus.BAD_REQUEST);
         }
-        if (productoService.existePorNombre(producto.getNombreProducto()) &&
-                productoService.obtenerPorNombre(producto.getNombreProducto()).get().getId() != id) {
-            return new ResponseEntity(new MessageDto("ese nombre ya existe"), HttpStatus.BAD_REQUEST);
+
+        if (projectService.existsByProjectTitle(project.getProjectTitle())) {
+            return new ResponseEntity(new MessageDto("ese titulo de proyecto ya existe"), HttpStatus.BAD_REQUEST);
         }
-        Producto prodUpdate = productoService.obtenerPorId(id).get();
-        prodUpdate.setNombreProducto(producto.getNombreProducto());
-        prodUpdate.setPrecio(producto.getPrecio());
-        productoService.guardar(prodUpdate);
-        return new ResponseEntity(new MessageDto("producto actualizado"), HttpStatus.CREATED);
+
+        Project projectUpdate = projectService.getById(id);
+        projectUpdate.setProjectTitle(project.getProjectTitle());
+        projectUpdate.setDescription(project.getDescription());
+        projectUpdate.setProjectDate(project.getProjectDate());
+        projectService.save(projectUpdate);
+        return new ResponseEntity(new MessageDto("proyecto actualizado"), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        if (!productoService.existePorId(id)) {
-            return new ResponseEntity(new MessageDto("no existe ese producto"), HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        if (!projectService.existsById(id)) {
+            return new ResponseEntity(new MessageDto("no existe ese proyecto"), HttpStatus.NOT_FOUND);
         }
-        productoService.borrar(id);
-        return new ResponseEntity(new MessageDto("producto eliminado"), HttpStatus.OK);
+        projectService.deleteById(id);
+        return new ResponseEntity(new MessageDto("proyecto eliminado"), HttpStatus.OK);
     }
 
-    */
 }
