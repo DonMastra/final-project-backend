@@ -72,10 +72,6 @@ public class ProjectController {
             return new ResponseEntity(new MessageDto("la descripcion es obligatoria"), HttpStatus.BAD_REQUEST);
         }
 
-        if (projectService.existsByProjectTitle(project.getProjectTitle())) {
-            return new ResponseEntity(new MessageDto("ese titulo de proyecto ya existe"), HttpStatus.BAD_REQUEST);
-        }
-
         Project projectUpdate = projectService.getById(id);
         projectUpdate.setProjectTitle(project.getProjectTitle());
         projectUpdate.setDescription(project.getDescription());
