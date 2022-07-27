@@ -3,6 +3,8 @@
 
 -> Por cuestiones personales / laborales, no pude terminar todas las tareas planeadas.
 
+-> En el directorio /resources hay disponible una colección de Postman para probar la API.
+
 # final-project-backend
 Spring Boot backend project for the final presentation of #YoProgramo
 
