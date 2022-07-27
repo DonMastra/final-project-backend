@@ -20,9 +20,8 @@ import java.util.Date;
 @Entity
 @Table(name = "education")
 public class Education {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String studyTitle;
     private Date fromDate;

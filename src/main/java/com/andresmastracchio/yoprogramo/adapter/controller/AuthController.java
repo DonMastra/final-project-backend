@@ -2,9 +2,9 @@ package com.andresmastracchio.yoprogramo.adapter.controller;
 
 import com.andresmastracchio.yoprogramo.config.security.jwt.JwtProvider;
 import com.andresmastracchio.yoprogramo.dto.JwtDto;
-import com.andresmastracchio.yoprogramo.dto.UserLoginDto;
 import com.andresmastracchio.yoprogramo.dto.MessageDto;
 import com.andresmastracchio.yoprogramo.dto.NewUserDto;
+import com.andresmastracchio.yoprogramo.dto.UserLoginDto;
 import com.andresmastracchio.yoprogramo.entity.Role;
 import com.andresmastracchio.yoprogramo.entity.RoleName;
 import com.andresmastracchio.yoprogramo.entity.User;
@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +31,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     private final PasswordEncoder passwordEncoder;
@@ -55,18 +54,21 @@ public class AuthController {
 
     @PostMapping("/new")
     public ResponseEntity<?> newUser(@Valid @RequestBody NewUserDto newUser,
-                                   BindingResult bindingResult){
-        if(bindingResult.hasErrors()) {
+                                     BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
             return new ResponseEntity(new MessageDto("campos vacíos o email inválido"), HttpStatus.BAD_REQUEST);
         }
-        if(userService.existsByName(newUser.getUsername())) {
+
+        if (userService.existsByName(newUser.getUsername())) {
             return new ResponseEntity(new MessageDto("ese nombre ya existe"), HttpStatus.BAD_REQUEST);
         }
-        if(userService.existsByEmail(newUser.getEmail())) {
+
+        if (userService.existsByEmail(newUser.getEmail())) {
             return new ResponseEntity(new MessageDto("ese email ya existe"), HttpStatus.BAD_REQUEST);
         }
-        User user = new User(newUser.getUsername(), newUser.getEmail(),
-                        passwordEncoder.encode(newUser.getPassword()));
+
+        User user = new User(newUser.getUsername(), newUser.getEmail(), passwordEncoder.encode(newUser.getPassword()));
         Set<String> rolesStr = newUser.getRoles();
         Set<Role> roles = new HashSet<>();
         for (String role : rolesStr) {
@@ -78,19 +80,22 @@ public class AuthController {
                 roles.add(roleUser);
             }
         }
+
         user.setRoles(roles);
         userService.saveUser(user);
         return new ResponseEntity(new MessageDto("usuario guardado"), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtDto> loginUser(@Valid @RequestBody UserLoginDto userLogin, BindingResult bindingResult){
-        if(bindingResult.hasErrors()) {
+    public ResponseEntity<JwtDto> loginUser(@Valid @RequestBody UserLoginDto userLogin, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
             return new ResponseEntity(new MessageDto("campos vacíos o email inválido"), HttpStatus.BAD_REQUEST);
         }
+
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword()));
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();

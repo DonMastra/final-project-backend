@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/exp")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class ExperienceController {
 
     private final ProfessionalExperienceService professionalExperienceService;
@@ -32,7 +31,8 @@ public class ExperienceController {
         this.professionalExperienceService = professionalExperienceService;
     }
 
-    @GetMapping("/experiences")
+    // TODO: POSTMAN -> OK / ANGULAR -> PENDING
+    @GetMapping()
     public ResponseEntity<List<ProfessionalExperience>> getAllExperienceComponents() {
         List<ProfessionalExperience> experiences = professionalExperienceService.getAllExperiences();
         return new ResponseEntity<>(experiences, HttpStatus.OK);
@@ -41,8 +41,10 @@ public class ExperienceController {
     @PostMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(@RequestBody ProfessionalExperience professionalExperience) {
+
         if (StringUtils.isBlank(professionalExperience.getJobTitle())) {
-            return new ResponseEntity(new MessageDto("el titulo de la experiencia laboral es obligatorio"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new MessageDto("el titulo de la experiencia laboral es obligatorio"),
+                    HttpStatus.BAD_REQUEST);
         }
 
         if (StringUtils.isBlank(professionalExperience.getDescription())) {
@@ -61,12 +63,14 @@ public class ExperienceController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@RequestBody ProfessionalExperience professionalExperience,
                                     @PathVariable("id") Integer id) {
+
         if (!professionalExperienceService.existsById(id)) {
             return new ResponseEntity(new MessageDto("no existe esa experiencia"), HttpStatus.NOT_FOUND);
         }
 
         if (StringUtils.isBlank(professionalExperience.getJobTitle())) {
-            return new ResponseEntity(new MessageDto("el titulo de la experiencia laboral es obligatorio"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new MessageDto("el titulo de la experiencia laboral es obligatorio"),
+                    HttpStatus.BAD_REQUEST);
         }
 
         if (StringUtils.isBlank(professionalExperience.getDescription())) {
@@ -76,6 +80,7 @@ public class ExperienceController {
         if (professionalExperienceService.existsByJobTitle(professionalExperience.getJobTitle())) {
             return new ResponseEntity(new MessageDto("ese experiencia ya existe"), HttpStatus.BAD_REQUEST);
         }
+
         ProfessionalExperience expUpdate = professionalExperienceService.getById(id);
         expUpdate.setJobTitle(professionalExperience.getJobTitle());
         expUpdate.setDescription(professionalExperience.getDescription());
@@ -89,12 +94,12 @@ public class ExperienceController {
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
+
         if (!professionalExperienceService.existsById(id)) {
             return new ResponseEntity(new MessageDto("no existe esa experiencia"), HttpStatus.NOT_FOUND);
         }
+
         professionalExperienceService.deleteById(id);
         return new ResponseEntity(new MessageDto("experiencia eliminada"), HttpStatus.OK);
     }
-
-
 }

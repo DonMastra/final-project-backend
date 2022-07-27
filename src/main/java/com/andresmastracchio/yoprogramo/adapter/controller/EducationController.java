@@ -2,13 +2,7 @@ package com.andresmastracchio.yoprogramo.adapter.controller;
 
 import com.andresmastracchio.yoprogramo.dto.MessageDto;
 import com.andresmastracchio.yoprogramo.entity.Education;
-import com.andresmastracchio.yoprogramo.entity.ProfessionalExperience;
-import com.andresmastracchio.yoprogramo.entity.Project;
-import com.andresmastracchio.yoprogramo.entity.Skill;
 import com.andresmastracchio.yoprogramo.usecase.impl.EducationService;
-import com.andresmastracchio.yoprogramo.usecase.impl.ProfessionalExperienceService;
-import com.andresmastracchio.yoprogramo.usecase.impl.ProjectService;
-import com.andresmastracchio.yoprogramo.usecase.impl.SkillService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/education")
+@RequestMapping("/api/edu")
 @CrossOrigin(origins = "http://localhost:4200")
 public class EducationController {
 
@@ -38,7 +32,8 @@ public class EducationController {
         this.educationService = educationService;
     }
 
-    @GetMapping("/education-list")
+    // TODO: POSTMAN -> OK / ANGULAR -> PENDING
+    @GetMapping()
     public ResponseEntity<List<Education>> getAllEducationComponents() {
         List<Education> allEducation = educationService.getAllStudies();
         return new ResponseEntity<>(allEducation, HttpStatus.OK);
@@ -47,6 +42,7 @@ public class EducationController {
     @PostMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(@RequestBody Education education) {
+
         if (StringUtils.isBlank(education.getDescription())) {
             return new ResponseEntity(new MessageDto("la descripción es obligatoria"), HttpStatus.BAD_REQUEST);
         }
@@ -66,6 +62,7 @@ public class EducationController {
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@RequestBody Education education, @PathVariable("id") Integer id) {
+
         if (!educationService.existsById(id)) {
             return new ResponseEntity(new MessageDto("no existe ese education"), HttpStatus.NOT_FOUND);
         }
@@ -94,11 +91,13 @@ public class EducationController {
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
+
         if (!educationService.existsById(id)) {
             return new ResponseEntity(new MessageDto("no existe ese titulo"), HttpStatus.NOT_FOUND);
         }
+
         educationService.deleteById(id);
-        return new ResponseEntity(new MessageDto("producto eliminado"), HttpStatus.OK);
+        return new ResponseEntity(new MessageDto("educacion eliminada"), HttpStatus.OK);
     }
 
 

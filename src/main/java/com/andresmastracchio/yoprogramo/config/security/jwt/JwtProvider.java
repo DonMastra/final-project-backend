@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Slf4j
@@ -27,7 +28,8 @@ public class JwtProvider {
         MainUser mainUser = (MainUser) authentication.getPrincipal();
         return Jwts.builder().setSubject(mainUser.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + expiration * 1000))
+                //.setExpiration(new Date(new Date().getTime() + expiration * 1000))
+                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(20).toInstant()))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }

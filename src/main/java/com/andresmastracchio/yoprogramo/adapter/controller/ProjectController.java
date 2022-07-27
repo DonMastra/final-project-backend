@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/project")
+@RequestMapping("/api/projects")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ProjectController {
 
@@ -32,7 +32,8 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @GetMapping("/projects")
+    // TODO: POSTMAN -> OK / ANGULAR -> PENDING
+    @GetMapping()
     public ResponseEntity<List<Project>> getAllProjects() {
         List<Project> projects = projectService.getAllProjects();
         return new ResponseEntity<>(projects, HttpStatus.OK);
@@ -41,6 +42,7 @@ public class ProjectController {
     @PostMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(@RequestBody Project project) {
+
         if (StringUtils.isBlank(project.getProjectTitle())) {
             return new ResponseEntity(new MessageDto("el nombre es obligatorio"), HttpStatus.BAD_REQUEST);
         }
@@ -60,6 +62,7 @@ public class ProjectController {
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@RequestBody Project project, @PathVariable("id") Integer id) {
+
         if (!projectService.existsById(id)) {
             return new ResponseEntity(new MessageDto("no existe el proyecto indicado"), HttpStatus.NOT_FOUND);
         }
@@ -76,6 +79,7 @@ public class ProjectController {
         projectUpdate.setProjectTitle(project.getProjectTitle());
         projectUpdate.setDescription(project.getDescription());
         projectUpdate.setProjectDate(project.getProjectDate());
+        projectUpdate.setImage(project.getImage());
         projectService.save(projectUpdate);
         return new ResponseEntity(new MessageDto("proyecto actualizado"), HttpStatus.CREATED);
     }
@@ -83,11 +87,12 @@ public class ProjectController {
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
+
         if (!projectService.existsById(id)) {
             return new ResponseEntity(new MessageDto("no existe ese proyecto"), HttpStatus.NOT_FOUND);
         }
+
         projectService.deleteById(id);
         return new ResponseEntity(new MessageDto("proyecto eliminado"), HttpStatus.OK);
     }
-
 }

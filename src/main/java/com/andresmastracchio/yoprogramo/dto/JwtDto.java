@@ -9,7 +9,6 @@ import java.util.Collection;
 @Getter
 @Setter
 public class JwtDto {
-
     private String token;
     private String bearer = "Bearer";
     private String username;

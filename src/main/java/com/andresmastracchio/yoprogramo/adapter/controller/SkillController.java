@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/skill")
+@RequestMapping("/api/skills")
 @CrossOrigin(origins = "http://localhost:4200")
 public class SkillController {
 
@@ -32,7 +32,8 @@ public class SkillController {
         this.skillService = skillService;
     }
 
-    @GetMapping("/skills")
+    // TODO: POSTMAN -> OK / ANGULAR -> PENDING
+    @GetMapping()
     public ResponseEntity<List<Skill>> getAllSkills() {
         List<Skill> skills = skillService.getAllSkills();
         return new ResponseEntity<>(skills, HttpStatus.OK);
@@ -41,6 +42,7 @@ public class SkillController {
     @PostMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(@RequestBody Skill skill) {
+
         if (StringUtils.isBlank(skill.getSkillName())) {
             return new ResponseEntity(new MessageDto("el nombre es obligatorio"), HttpStatus.BAD_REQUEST);
         }
@@ -56,6 +58,7 @@ public class SkillController {
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@RequestBody Skill skill, @PathVariable("id") Integer id) {
+
         if (!skillService.existsById(id)) {
             return new ResponseEntity(new MessageDto("no existe ese skill"), HttpStatus.NOT_FOUND);
         }
@@ -70,15 +73,19 @@ public class SkillController {
 
         Skill skillUpdate = skillService.getById(id);
         skillUpdate.setSkillName(skill.getSkillName());
+
+        skillService.save(skillUpdate);
         return new ResponseEntity(new MessageDto("skill actualizado"), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
+
         if (!skillService.existsById(id)) {
             return new ResponseEntity(new MessageDto("no existe esa skill"), HttpStatus.NOT_FOUND);
         }
+
         skillService.deleteById(id);
         return new ResponseEntity(new MessageDto("skill eliminada"), HttpStatus.OK);
     }
