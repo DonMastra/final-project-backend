@@ -3,7 +3,7 @@
 
 -> Por cuestiones personales / laborales, no pude terminar todas las tareas planeadas.
 
--> En el directorio /resources hay disponible una colección de Postman para probar la API.
+-> En el directorio /resources hay disponible una colección de Postman para probar la API, junto con un script sql (dump) de la BD para levantarla.
 
 # final-project-backend
 Spring Boot backend project for the final presentation of #YoProgramo
